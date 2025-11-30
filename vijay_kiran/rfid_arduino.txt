@@ -1,0 +1,36 @@
+#include <SPI.h>
+#include <MFRC522.h>
+
+#define SS_PIN 10
+#define RST_PIN 9
+
+MFRC522 rfid(SS_PIN, RST_PIN);
+
+void setup() {
+  Serial.begin(9600);
+  SPI.begin();
+  rfid.PCD_Init();
+}
+
+void loop() {
+  // 1. Look for new cards
+  if (!rfid.PICC_IsNewCardPresent()) return;
+  if (!rfid.PICC_ReadCardSerial()) return;
+
+  // 2. Print UID as a clean hex string (e.g., "d38a421b")
+  printHex(rfid.uid.uidByte, rfid.uid.size);
+  Serial.println(); // Send newline to signal end of ID
+
+  // 3. Halt to prevent reading the same card 1000 times instantly
+  rfid.PICC_HaltA();
+  rfid.PCD_StopCrypto1();
+  delay(1000); // 1 second delay before next read
+}
+
+// Helper to print hex with leading zeros
+void printHex(byte *buffer, byte bufferSize) {
+  for (byte i = 0; i < bufferSize; i++) {
+    if (buffer[i] < 0x10) Serial.print("0");
+    Serial.print(buffer[i], HEX);
+  }
+}
