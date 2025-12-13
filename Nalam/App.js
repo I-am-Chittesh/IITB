@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, SafeAreaView } from 'react-native';
 
 // Import your configurations
-import { RFID_URL, AUTONOMOUS_URL, POLLING_INTERVAL } from './config/TempConfig';
+import { RFID_URL, AUTONOMOUS_URL, POLLING_INTERVAL } from './config/ApiConfig';
 import { supabase } from './config/supabaseClient';
 
 // --- UI COMPONENT ---
